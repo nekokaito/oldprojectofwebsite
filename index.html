@@ -1,10 +1,61 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <title>HTML Meta Tag</title>
-      <meta http-equiv = "refresh" content = "3; url = https://siddiqsazzad.ml" />
-   </head>
-   <body>
-      <p>Redirecting to another URL</p>
-   </body>
+
+<head>
+    <title>Exex Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+</head>
+
+<body>
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link active" href="">Back To Main Website</a>
+  </li>
+</ul>
+<div class="container pt-3">
+ <br>
+  <div class="jumbotron">
+   <ul id="form-control"></ul>
+    <form id="form">
+     <div class="form-group">
+      <label for="input">Message</label>
+      <input type="text" class="form-control" id="input" aria-describedby="messageH" placeholder="Type Your Message">
+      <small id="messageH" class="form-text text-muted">Send A Message To People</small>
+      <button type="submit" class="btn btn-primary">Send</button>
+      <div class="fixed-bottom">
+          <footer>© 2021 Exex</footer>
+      </div>
+     </div>
+    </form>
+  </div>
+</div> 
+<script>
+    const socket = io();
+
+    const username = window.prompt("What's Your Name?");
+    socket.emit('new user', username);
+
+    const messageForm = document.getElementById('form');
+    const textInput = document.getElementById('input');
+
+    messageForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (textInput.value) {socket.emit('new message', textInput.value);
+            textInput.value = '';
+        }
+    });
+ 
+    socket.on('send message', (data) => {
+        const messageList = document.getElementById('form-control');
+        const chatItem = document.createElement('li');
+        chatItem.textContent = data.user + ': ' + data.message;
+        messageList.appendChild(chatItem);
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+</script>
+
+</body>
+
 </html>
